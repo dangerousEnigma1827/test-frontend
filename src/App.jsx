@@ -1,18 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import api from "./api";
 
 function App() {
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const getData = async () => {
-      const res = await api.get("/");
-      console.log(res.data);
+    const fetchUsers = async () => {
+      try {
+        const res = await api.get("/users");
+        setUsers(res.data);
+      } catch (err) {
+        console.log("Error fetching users:", err);
+      }
     };
 
-    getData();
+    fetchUsers();
   }, []);
 
-  return <h1>Hello</h1>;
+  return (
+    <div>
+      <h1>Users List</h1>
+
+      {users.map((user) => (
+        <div key={user._id}>
+          <p>{user.name}</p>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default App;
